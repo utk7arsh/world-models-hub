@@ -1,0 +1,2607 @@
+{
+  "meta": {
+    "name": "Engram",
+    "tagline": "A second brain for world models",
+    "sources": [],
+    "generated": "2026-07-08"
+  },
+  "paradigms": [
+    {
+      "id": "foundations-theory",
+      "name": "Foundations & Theory",
+      "blurb": "The intellectual bedrock where planning is revealed as learning from imagined data and the brain is cast as a hierarchical generative predictor driven by curiosity and free-energy minimization."
+    },
+    {
+      "id": "latent-imagination",
+      "name": "Latent Imagination (RSSM)",
+      "blurb": "The lineage from Ha & Schmidhuber's World Models to the Dreamer family, which compress perception into a recurrent latent state and learn behaviors entirely inside compact imagined dreams."
+    },
+    {
+      "id": "planning-mcts",
+      "name": "Planning & Value-Equivalence",
+      "blurb": "The MuZero tradition that learns value-equivalent latent models tuned for decision-making and searches or plans within them without ever reconstructing a pixel."
+    },
+    {
+      "id": "autoregressive-wm",
+      "name": "Autoregressive / Token World Models",
+      "blurb": "Discretize the world into tokens and let GPT-style transformers roll the future forward one token at a time, importing the modeling power of language models into world modeling."
+    },
+    {
+      "id": "video-diffusion-wm",
+      "name": "Generative Video World Models",
+      "blurb": "Turn internet-scale video into playable, controllable neural simulators via diffusion and token generation, betting that scaling generation alone conjures physics and object permanence."
+    },
+    {
+      "id": "jepa",
+      "name": "Joint-Embedding Predictive (JEPA)",
+      "blurb": "LeCun's wager that autonomous intelligence should predict the abstract representation of the future rather than its pixels, learning collapse-free latent world models by self-supervision."
+    },
+    {
+      "id": "embodied-agents",
+      "name": "Embodied & Real-World Agents",
+      "blurb": "Where world models leave the simulator to drive real quadrupeds, robot arms, and self-driving cars, learning dynamics online or from real-world sensor streams."
+    },
+    {
+      "id": "benchmarks-eval",
+      "name": "Benchmarks & Evaluation",
+      "blurb": "The yardsticks and evaluation protocols — Atari, DMControl, Crafter, bsuite — that quietly decide which world models the field calls successful."
+    }
+  ],
+  "papers": [
+    {
+      "id": "world-models",
+      "title": "World Models",
+      "authors": [
+        "Ha",
+        "Schmidhuber"
+      ],
+      "year": 2018,
+      "venue": "NeurIPS 2018",
+      "paradigm": "latent-imagination",
+      "tags": [
+        "#seminal",
+        "#latent",
+        "#rl",
+        "#generative",
+        "#planning"
+      ],
+      "tldr": "The paper that popularized training an agent almost entirely inside a learned generative model of its environment.",
+      "contribution": "Introduces a three-part architecture: a VAE (V) that compresses each frame into a latent code, a recurrent mixture-density RNN (M) that predicts the next latent given the action, and a tiny linear controller (C) evolved with CMA-ES on top of the latent+hidden state. Because M is a learned probabilistic simulator, the controller can be trained purely inside the RNN's 'dream' rollouts and then transferred back to the real environment. It established the template of compressing perception into a compact latent and learning dynamics there for control.",
+      "benchmarks": [
+        "CarRacing-v0",
+        "VizDoom Take Cover"
+      ],
+      "metrics": "First agent to solve CarRacing-v0 (avg score > 900); learned to act inside the dreamed VizDoom environment.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1803.10122",
+        "project": "https://worldmodels.github.io/"
+      },
+      "buildsOn": [
+        "schmidhuber-predictive",
+        "dyna"
+      ],
+      "related": [
+        "lecun-path-ami",
+        "schmidhuber-fun-theory",
+        "planet"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "dyna",
+      "title": "Dyna, an Integrated Architecture for Learning, Planning, and Reacting",
+      "authors": [
+        "Sutton"
+      ],
+      "year": 1991,
+      "venue": "ACM SIGART Bulletin",
+      "paradigm": "foundations-theory",
+      "tags": [
+        "#seminal",
+        "#rl",
+        "#planning",
+        "#model-based"
+      ],
+      "tldr": "The foundational blueprint for model-based RL: interleave real experience, learning a predictive model, and planning against that model with the same update rule.",
+      "contribution": "Proposes a unified architecture where an agent simultaneously learns a value function/policy from real transitions, learns an internal model of the environment's dynamics and reward, and uses simulated experience from that model to perform extra value updates. This showed planning and reinforcement learning are the same computation applied to real vs. hypothetical data, a principle that underpins essentially all later world-model RL.",
+      "benchmarks": [
+        "gridworld navigation"
+      ],
+      "links": {},
+      "buildsOn": [],
+      "related": [
+        "world-models"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "schmidhuber-predictive",
+      "title": "Making the World Differentiable: On Using Self-Supervised Fully Recurrent Neural Networks for Dynamic Reinforcement Learning and Planning in Non-Stationary Environments",
+      "authors": [
+        "Schmidhuber"
+      ],
+      "year": 1990,
+      "venue": "Tech Report FKI-126-90, TU Munich",
+      "paradigm": "foundations-theory",
+      "tags": [
+        "#seminal",
+        "#rl",
+        "#recurrent",
+        "#predictive",
+        "#curiosity"
+      ],
+      "tldr": "The original recurrent 'world model + controller' system, where a predictive network learns environment dynamics and a controller backpropagates through it to plan.",
+      "contribution": "Describes a controller network coupled to a separate recurrent 'model network' trained self-supervised to predict future inputs (including reward) from actions. Because the model is differentiable, the controller obtains gradients for goal-directed behavior by backpropagating through the learned dynamics, and the same model drives curiosity by rewarding states where its predictions are wrong. This is the direct intellectual ancestor of Ha & Schmidhuber's World Models.",
+      "links": {},
+      "buildsOn": [],
+      "related": [
+        "world-models",
+        "schmidhuber-fun-theory"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "schmidhuber-fun-theory",
+      "title": "Formal Theory of Creativity, Fun, and Intrinsic Motivation (1990-2010)",
+      "authors": [
+        "Schmidhuber"
+      ],
+      "year": 2010,
+      "venue": "IEEE Transactions on Autonomous Mental Development",
+      "paradigm": "foundations-theory",
+      "tags": [
+        "#theory",
+        "#curiosity",
+        "#intrinsic-motivation",
+        "#compression"
+      ],
+      "tldr": "A unifying theory casting curiosity and creativity as intrinsic reward for improving a predictive/compressive world model.",
+      "contribution": "Formalizes intrinsic motivation as reward proportional to the agent's rate of progress in compressing (predicting) its sensory history. An agent is driven to seek data its world model can still learn from but has not yet mastered, naturally producing exploration, play, and 'interestingness' while avoiding both fully predictable and fully random stimuli. It provides the theoretical grounding for curiosity-driven world-model learning.",
+      "links": {},
+      "buildsOn": [
+        "schmidhuber-predictive"
+      ],
+      "related": [
+        "world-models"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "rao-ballard-pc",
+      "title": "Predictive Coding in the Visual Cortex: A Functional Interpretation of Some Extra-classical Receptive-field Effects",
+      "authors": [
+        "Rao",
+        "Ballard"
+      ],
+      "year": 1999,
+      "venue": "Nature Neuroscience",
+      "paradigm": "foundations-theory",
+      "tags": [
+        "#neuroscience",
+        "#predictive-coding",
+        "#generative",
+        "#seminal"
+      ],
+      "tldr": "The influential neuroscience model proposing the cortex is a hierarchical generative predictor that only transmits prediction errors upward.",
+      "contribution": "Introduces a hierarchical model in which higher visual areas predict the activity of lower areas via feedback connections, while feedforward connections carry only the residual prediction error. Fitting this scheme to natural images reproduces non-classical receptive-field phenomena such as end-stopping. It established predictive coding as a leading account of perception as inference over an internal generative model of the world.",
+      "links": {},
+      "buildsOn": [],
+      "related": [
+        "friston-fep",
+        "lecun-path-ami"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "friston-fep",
+      "title": "The Free-Energy Principle: A Unified Brain Theory?",
+      "authors": [
+        "Friston"
+      ],
+      "year": 2010,
+      "venue": "Nature Reviews Neuroscience",
+      "paradigm": "foundations-theory",
+      "tags": [
+        "#neuroscience",
+        "#predictive-coding",
+        "#theory",
+        "#active-inference"
+      ],
+      "tldr": "Proposes that brains minimize variational free energy, casting perception, learning, and action as inference and prediction-error minimization over an internal model of the world.",
+      "contribution": "Argues that any self-organizing agent resisting disorder must minimize the surprise (variational free energy) of its sensory inputs, which decomposes into perception (updating an internal generative model) and active inference (acting to make sensations match predictions). It unifies predictive coding, the Bayesian brain, and optimal control under one objective, and is a core theoretical reference for biologically motivated world models.",
+      "links": {},
+      "buildsOn": [
+        "rao-ballard-pc"
+      ],
+      "related": [
+        "lecun-path-ami",
+        "rao-ballard-pc"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "lecun-path-ami",
+      "title": "A Path Towards Autonomous Machine Intelligence",
+      "authors": [
+        "LeCun"
+      ],
+      "year": 2022,
+      "venue": "OpenReview position paper",
+      "paradigm": "jepa",
+      "tags": [
+        "#seminal",
+        "#position-paper",
+        "#jepa",
+        "#energy-based",
+        "#self-supervised",
+        "#planning",
+        "#latent"
+      ],
+      "tldr": "The conceptual manifesto that introduced the Joint-Embedding Predictive Architecture (JEPA) and framed world models that predict in abstract representation space rather than reconstructing pixels.",
+      "contribution": "Lays out a blueprint for autonomous intelligence built around a differentiable world model trained by self-supervised prediction. It argues that generative pixel-level prediction is wasteful and ill-posed under uncertainty, and instead proposes energy-based Joint-Embedding Predictive Architectures (JEPAs) that predict the representation of a target from a context, with regularization to prevent collapse. It also introduces the hierarchical multi-timescale H-JEPA idea and a configurator/actor/critic layout for planning by minimizing energy in latent space, launching the JEPA research line.",
+      "links": {
+        "project": "https://openreview.net/forum?id=BZ5a1r-kVsf"
+      },
+      "buildsOn": [
+        "world-models",
+        "friston-fep",
+        "rao-ballard-pc"
+      ],
+      "related": [
+        "i-jepa",
+        "v-jepa",
+        "v-jepa2"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "planet",
+      "title": "Learning Latent Dynamics for Planning from Pixels (PlaNet)",
+      "authors": [
+        "Hafner",
+        "Lillicrap",
+        "Fischer",
+        "Villegas",
+        "Ha",
+        "et al."
+      ],
+      "year": 2019,
+      "venue": "ICML 2019",
+      "paradigm": "latent-imagination",
+      "tags": [
+        "#seminal",
+        "#latent",
+        "#rl",
+        "#planning",
+        "#rssm"
+      ],
+      "tldr": "Introduces the Recurrent State-Space Model (RSSM) and plans directly in latent space from pixels, the backbone of the whole Dreamer line.",
+      "contribution": "Proposes the RSSM, a latent dynamics model that splits state into a deterministic recurrent component and a stochastic component, capturing both reliable memory and uncertainty. It trains this model with a multi-step variational latent-overshooting objective and then does purely latent-space online planning with the cross-entropy method (no policy network, no reconstruction at plan time). This showed model-based RL from pixels could match leading model-free methods with far fewer interactions.",
+      "benchmarks": [
+        "DeepMind Control Suite"
+      ],
+      "metrics": "Matched top model-free agents on continuous-control tasks using ~50x fewer episodes.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1811.04551",
+        "code": "https://github.com/google-research/planet"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "dreamer"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "dreamer",
+      "title": "Dream to Control: Learning Behaviors by Latent Imagination (Dreamer)",
+      "authors": [
+        "Hafner",
+        "Lillicrap",
+        "Ba",
+        "Norouzi"
+      ],
+      "year": 2020,
+      "venue": "ICLR 2020",
+      "paradigm": "latent-imagination",
+      "tags": [
+        "#seminal",
+        "#latent",
+        "#rl",
+        "#actor-critic",
+        "#rssm"
+      ],
+      "tldr": "Replaces PlaNet's online planning with an actor-critic learned by backpropagating value gradients through imagined RSSM rollouts.",
+      "contribution": "Keeps PlaNet's RSSM world model but learns behaviors instead of re-planning each step: it trains an actor and value network entirely on latent 'imagined' trajectories rolled out from the model. Because the latent dynamics are differentiable, it propagates analytic value gradients back through the imagined states to update the policy, using a lambda-return value target for long-horizon credit assignment. This decoupled fast policy inference from expensive planning and set the efficiency standard for latent model-based RL.",
+      "benchmarks": [
+        "DeepMind Control Suite"
+      ],
+      "metrics": "State-of-the-art data efficiency and final performance across 20 DMControl tasks from pixels.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1912.01603",
+        "code": "https://github.com/danijar/dreamer",
+        "project": "https://danijar.com/project/dreamer/"
+      },
+      "buildsOn": [
+        "planet",
+        "world-models"
+      ],
+      "related": [
+        "dreamerv2",
+        "planet"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "dreamerv2",
+      "title": "Mastering Atari with Discrete World Models (DreamerV2)",
+      "authors": [
+        "Hafner",
+        "Lillicrap",
+        "Norouzi",
+        "Ba"
+      ],
+      "year": 2021,
+      "venue": "ICLR 2021",
+      "paradigm": "latent-imagination",
+      "tags": [
+        "#seminal",
+        "#latent",
+        "#rl",
+        "#atari",
+        "#discrete",
+        "#rssm"
+      ],
+      "tldr": "Adapts Dreamer to discrete categorical latents and becomes the first world-model agent to reach human-level Atari from imagination alone.",
+      "contribution": "Swaps the RSSM's Gaussian stochastic state for a vector of categorical latents trained with straight-through gradients, better capturing the multimodal, discrete transitions of games, and adds KL balancing to stop the prior from collapsing. The discrete latent proved crucial for accurate long-horizon imagination and became the conceptual basis for discrete-token world models like IRIS and STORM. It was the first agent trained purely inside a learned world model to match human-level Atari on a single GPU.",
+      "benchmarks": [
+        "Atari 200M"
+      ],
+      "metrics": "First to exceed human-level mean/median performance on Atari using a single learned world model.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2010.02193",
+        "code": "https://github.com/danijar/dreamerv2"
+      },
+      "buildsOn": [
+        "dreamer",
+        "planet"
+      ],
+      "related": [
+        "dreamerv3",
+        "transdreamer",
+        "iris",
+        "storm",
+        "twm"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "dreamerv3",
+      "title": "Mastering Diverse Domains through World Models (DreamerV3)",
+      "authors": [
+        "Hafner",
+        "Pasukonis",
+        "Ba",
+        "Lillicrap"
+      ],
+      "year": 2023,
+      "venue": "Nature 2025",
+      "paradigm": "latent-imagination",
+      "tags": [
+        "#latent",
+        "#rl",
+        "#general",
+        "#robust",
+        "#rssm"
+      ],
+      "tldr": "A single set of hyperparameters makes the Dreamer recipe work robustly across 150+ tasks, including collecting diamonds in Minecraft from scratch.",
+      "contribution": "Introduces robustness techniques, most notably symlog prediction of rewards and values plus twohot discretized regression, so the same network handles wildly different reward and observation scales without per-task tuning. It further stabilizes learning with free-bits KL balancing, normalized returns, and careful architecture scaling. This turned latent-imagination RL into a general, out-of-the-box method and was the first to obtain diamonds in Minecraft without human data or curricula.",
+      "benchmarks": [
+        "Atari 100k",
+        "DMControl",
+        "Crafter",
+        "Minecraft (Diamond)",
+        "DMLab"
+      ],
+      "metrics": "First to mine diamonds in Minecraft from scratch; strong results across 150+ tasks with fixed hyperparameters.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2301.04104",
+        "code": "https://github.com/danijar/dreamerv3",
+        "project": "https://danijar.com/project/dreamerv3/"
+      },
+      "buildsOn": [
+        "dreamerv2"
+      ],
+      "related": [
+        "daydreamer"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "muzero",
+      "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model (MuZero)",
+      "authors": [
+        "Schrittwieser",
+        "Antonoglou",
+        "Hubert",
+        "Simonyan",
+        "Sifre",
+        "et al."
+      ],
+      "year": 2020,
+      "venue": "Nature",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#seminal",
+        "#mcts",
+        "#rl",
+        "#value-equivalence",
+        "#planning"
+      ],
+      "tldr": "Shows you can plan with Monte Carlo Tree Search inside a learned latent model that never reconstructs observations, matching AlphaZero while conquering Atari.",
+      "contribution": "MuZero learns three coupled networks: a representation function mapping observations to a latent state, a dynamics function rolling that latent forward given an action while predicting immediate reward, and a prediction function outputting policy and value. Crucially the model is trained end-to-end only to match observed rewards, bootstrapped values, and MCTS policy targets rather than to reconstruct frames, embodying the value-equivalence idea that a model need only be accurate for the quantities used in planning. One algorithm masters board games needing precise lookahead and visually complex Atari without prior knowledge of the rules.",
+      "benchmarks": [
+        "Atari (ALE 57 games)",
+        "Go",
+        "Chess",
+        "Shogi"
+      ],
+      "metrics": "New state of the art on the Atari 57-game benchmark while matching AlphaZero in Go, chess and shogi.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1911.08265"
+      },
+      "buildsOn": [
+        "value-prediction-network"
+      ],
+      "related": [
+        "value-equivalence",
+        "sampled-muzero",
+        "stochastic-muzero",
+        "efficientzero"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "value-prediction-network",
+      "title": "Value Prediction Network",
+      "authors": [
+        "Oh",
+        "Singh",
+        "Lee"
+      ],
+      "year": 2017,
+      "venue": "NeurIPS 2017",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#foundational",
+        "#latent",
+        "#rl",
+        "#planning",
+        "#value-equivalence"
+      ],
+      "tldr": "An early model-based agent that plans in an abstract state space trained to predict values and rewards rather than pixels, directly foreshadowing MuZero.",
+      "contribution": "VPN integrates model-free value estimation with model-based planning by learning a dynamics model that operates purely in an abstract latent state, trained to predict discounted future rewards and values instead of raw observations. Planning unrolls this abstract model to produce multi-step value estimates used for action selection and TD targets. It demonstrated that grounding a learned model in value prediction, not reconstruction, yields better planning on stochastic and visually rich domains.",
+      "benchmarks": [
+        "Atari",
+        "Collect (maze) domains"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1707.03497"
+      },
+      "buildsOn": [],
+      "related": [
+        "muzero",
+        "value-equivalence"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "value-equivalence",
+      "title": "The Value Equivalence Principle for Model-Based Reinforcement Learning",
+      "authors": [
+        "Grimm",
+        "Barreto",
+        "Singh",
+        "Silver"
+      ],
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#theory",
+        "#value-equivalence",
+        "#rl",
+        "#planning"
+      ],
+      "tldr": "Formalizes why a learned model should only need to predict the values of policies rather than reconstruct the environment, grounding MuZero-style agents.",
+      "contribution": "Defines two models as value-equivalent if they induce the same Bellman updates over a chosen set of policies and value functions, arguing that model learning should target this equivalence class rather than faithful next-state prediction. It shows that restricting to a smaller set of policies and functions yields simpler, more useful models for a fixed capacity, and that this objective implicitly drives methods like the Predictron and MuZero. It reframes model-based RL around task-relevant abstraction instead of generative accuracy.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2011.03506"
+      },
+      "buildsOn": [
+        "value-prediction-network"
+      ],
+      "related": [
+        "muzero"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "sampled-muzero",
+      "title": "Learning and Planning in Complex Action Spaces (Sampled MuZero)",
+      "authors": [
+        "Hubert",
+        "Schrittwieser",
+        "Antonoglou",
+        "Barekatain",
+        "Schmitt",
+        "Silver"
+      ],
+      "year": 2021,
+      "venue": "ICML 2021",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#mcts",
+        "#continuous-control",
+        "#rl",
+        "#planning"
+      ],
+      "tldr": "Extends MuZero to large and continuous action spaces by planning and learning over a sampled subset of actions instead of enumerating them all.",
+      "contribution": "Introduces a framework in which policy improvement and MCTS are computed using only a small sample of actions drawn from a proposal distribution, with importance-weighting to keep estimates unbiased. This makes tree search tractable in high-dimensional discrete or continuous action spaces where full enumeration is impossible, yielding a single MuZero variant that scales from Atari to continuous control and complex combinatorial actions.",
+      "benchmarks": [
+        "Atari",
+        "DeepMind Control Suite",
+        "Go"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2104.06303"
+      },
+      "buildsOn": [
+        "muzero"
+      ],
+      "related": [
+        "stochastic-muzero",
+        "efficientzero-v2",
+        "tdmpc"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "stochastic-muzero",
+      "title": "Planning in Stochastic Environments with a Learned Model (Stochastic MuZero)",
+      "authors": [
+        "Antonoglou",
+        "Schrittwieser",
+        "Ozair",
+        "Hubert",
+        "Silver"
+      ],
+      "year": 2022,
+      "venue": "ICLR 2022",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#mcts",
+        "#stochastic",
+        "#rl",
+        "#planning"
+      ],
+      "tldr": "Generalizes MuZero to genuinely stochastic environments by learning a model with discrete chance nodes so MCTS can reason over environment randomness.",
+      "contribution": "Augments the learned model with chance states and afterstates, using a VQ-VAE-style discrete latent to represent stochastic transitions as chance outcomes. Monte Carlo Tree Search is extended to alternate between decision nodes (agent actions) and chance nodes (environment outcomes), letting the agent plan under uncertainty rather than assuming determinism. It matches deterministic MuZero on Go while substantially outperforming it on stochastic domains like backgammon and 2048.",
+      "benchmarks": [
+        "Go",
+        "Backgammon",
+        "2048"
+      ],
+      "links": {
+        "project": "https://openreview.net/forum?id=X6D9bAHhBQ1"
+      },
+      "buildsOn": [
+        "muzero"
+      ],
+      "related": [
+        "sampled-muzero",
+        "efficientzero"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "efficientzero",
+      "title": "Mastering Atari Games with Limited Data (EfficientZero)",
+      "authors": [
+        "Ye",
+        "Liu",
+        "Kurutach",
+        "Abbeel",
+        "Gao"
+      ],
+      "year": 2021,
+      "venue": "NeurIPS 2021",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#sample-efficiency",
+        "#mcts",
+        "#rl",
+        "#atari-100k"
+      ],
+      "tldr": "Makes MuZero dramatically more sample-efficient, becoming the first method to exceed median human performance on Atari with only two hours of gameplay.",
+      "contribution": "Adds three components to MuZero: a self-supervised consistency loss (SimSiam-style) that forces the learned dynamics to match the representation of the actually observed next state, an end-to-end prediction of the value prefix to handle aliasing in the reward horizon, and an off-policy correction that adjusts stale reanalyzed targets. Together these let the learned model train reliably from tiny amounts of data, setting a new bar for data-efficient RL on Atari 100k.",
+      "benchmarks": [
+        "Atari 100k",
+        "DeepMind Control (state)"
+      ],
+      "metrics": "194% median human-normalized score on Atari 100k, first to surpass median human with ~2 hours of data.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2111.00210",
+        "code": "https://github.com/YeWR/EfficientZero"
+      },
+      "buildsOn": [
+        "muzero"
+      ],
+      "related": [
+        "efficientzero-v2",
+        "dreamerv2",
+        "sampled-muzero"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "efficientzero-v2",
+      "title": "EfficientZero V2: Mastering Discrete and Continuous Control with Limited Data",
+      "authors": [
+        "Wang",
+        "Ye",
+        "Liu",
+        "Gao",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "ICML 2024",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#sample-efficiency",
+        "#mcts",
+        "#continuous-control",
+        "#rl"
+      ],
+      "tldr": "A unified, sample-efficient successor to EfficientZero that masters both discrete and continuous control from limited data with a single algorithm.",
+      "contribution": "Combines EfficientZero's sample-efficiency tricks with sampled-action search so the same agent handles discrete and continuous action spaces. It introduces search-based value estimation with Gumbel-style action sampling and a mixed value target that blends search results with learned value estimates for stability under scarce data. It outperforms prior data-efficient methods, including DreamerV3 and the original EfficientZero, across a broad suite of low-data benchmarks.",
+      "benchmarks": [
+        "Atari 100k",
+        "DeepMind Control (Proprio & Vision)",
+        "DMControl"
+      ],
+      "metrics": "State-of-the-art on the majority of 66 tasks under limited-data settings, surpassing DreamerV3.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2403.00564",
+        "code": "https://github.com/Shengjiewang-Jason/EfficientZeroV2"
+      },
+      "buildsOn": [
+        "efficientzero",
+        "sampled-muzero"
+      ],
+      "related": [
+        "tdmpc2",
+        "dreamerv3"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "tdmpc",
+      "title": "Temporal Difference Learning for Model Predictive Control (TD-MPC)",
+      "authors": [
+        "Hansen",
+        "Wang",
+        "Su"
+      ],
+      "year": 2022,
+      "venue": "ICML 2022",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#mpc",
+        "#latent",
+        "#continuous-control",
+        "#value-equivalence",
+        "#rl"
+      ],
+      "tldr": "Combines short-horizon planning in a task-oriented latent model with a learned terminal value function, getting planning's sample efficiency and model-free's asymptotic reach.",
+      "contribution": "Learns a latent dynamics model trained purely to predict rewards and values (a value-equivalent, task-oriented latent model) and plans at test time using sampling-based Model Predictive Control (MPPI) over short horizons. Crucially the trajectory optimizer bootstraps beyond its planning horizon with a jointly learned TD value function, so it does not need long, accurate rollouts. This yields strong sample efficiency and wall-clock performance on continuous control without ever reconstructing observations.",
+      "benchmarks": [
+        "DeepMind Control Suite",
+        "Meta-World"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2203.04955",
+        "code": "https://github.com/nicklashansen/tdmpc",
+        "project": "https://www.nicklashansen.com/td-mpc/"
+      },
+      "buildsOn": [
+        "value-equivalence",
+        "muzero"
+      ],
+      "related": [
+        "tdmpc2",
+        "sampled-muzero",
+        "dreamerv2"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "tdmpc2",
+      "title": "TD-MPC2: Scalable, Robust World Models for Continuous Control",
+      "authors": [
+        "Hansen",
+        "Su",
+        "Wang"
+      ],
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "paradigm": "planning-mcts",
+      "tags": [
+        "#mpc",
+        "#latent",
+        "#continuous-control",
+        "#scaling",
+        "#multitask"
+      ],
+      "tldr": "Scales TD-MPC into a robust, hyperparameter-stable recipe that trains a single large world model as a generalist agent across 80+ diverse continuous-control tasks.",
+      "contribution": "Rearchitects TD-MPC for scale and robustness, normalizing losses across reward and value scales, using an ensemble of value functions, SimNorm latent representations, and a design that works with fixed hyperparameters across domains. It shows a single agent, even a single set of weights, can be trained on many embodiments and tasks, with performance improving smoothly with model and data size. This positions learned latent world models plus MPC as a scalable, generalist alternative for continuous control.",
+      "benchmarks": [
+        "DeepMind Control Suite",
+        "Meta-World",
+        "ManiSkill2",
+        "MyoSuite"
+      ],
+      "metrics": "Single agent solving 104 online-RL tasks across 4 domains; a 317M-parameter model trained on 80 tasks.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2310.16828",
+        "code": "https://github.com/nicklashansen/tdmpc2",
+        "project": "https://www.tdmpc2.com/"
+      },
+      "buildsOn": [
+        "tdmpc"
+      ],
+      "related": [
+        "efficientzero-v2",
+        "dreamerv3",
+        "sampled-muzero"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "iris",
+      "title": "Transformers are Sample-Efficient World Models (IRIS)",
+      "authors": [
+        "Micheli",
+        "Alonso",
+        "Fleuret"
+      ],
+      "year": 2023,
+      "venue": "ICLR 2023",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#seminal",
+        "#transformer",
+        "#discrete-tokens",
+        "#rl",
+        "#atari"
+      ],
+      "tldr": "Shows a discrete autoencoder plus an autoregressive Transformer over image tokens makes a highly sample-efficient world model for RL.",
+      "contribution": "IRIS discretizes each frame into a small grid of tokens with a VQ-VAE, then trains a GPT-style Transformer to autoregressively predict the next frame's tokens, reward, and episode termination. The agent is trained purely inside this learned latent 'imagination', decoupling perception (tokenizer) from dynamics (Transformer). This token-prediction formulation lets the world model exploit the modeling power of language-model architectures while remaining data-efficient.",
+      "benchmarks": [
+        "Atari 100k"
+      ],
+      "metrics": "Mean human-normalized score 1.046, superhuman on 10 of 26 games with only 100k frames.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2209.00588",
+        "code": "https://github.com/eloialonso/iris"
+      },
+      "buildsOn": [
+        "dreamerv2"
+      ],
+      "related": [
+        "twm",
+        "storm",
+        "delta-iris"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "twm",
+      "title": "Transformer-based World Models Are Happy With 100k Interactions (TWM)",
+      "authors": [
+        "Robine",
+        "Höftmann",
+        "Uelwer",
+        "Harmeling"
+      ],
+      "year": 2023,
+      "venue": "ICLR 2023",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#transformer",
+        "#rl",
+        "#atari",
+        "#memory",
+        "#latent"
+      ],
+      "tldr": "Applies a Transformer-XL-style autoregressive world model over latent states to achieve strong sample efficiency on Atari 100k.",
+      "contribution": "TWM replaces the recurrent RSSM core of Dreamer-style agents with an autoregressive Transformer-XL that attends over past latent states, actions, and rewards to predict the next latent. Transformer-XL's segment-level recurrence gives long effective context without quadratic cost over full episodes. The result is a sample-efficient model-based agent trained on imagined latent rollouts.",
+      "benchmarks": [
+        "Atari 100k"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2303.07109",
+        "code": "https://github.com/jrobine/twm"
+      },
+      "buildsOn": [
+        "dreamerv2"
+      ],
+      "related": [
+        "iris",
+        "storm"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "storm",
+      "title": "STORM: Efficient Stochastic Transformer based World Models for Reinforcement Learning",
+      "authors": [
+        "Zhang",
+        "Wang",
+        "Sun",
+        "Yuan",
+        "Huang"
+      ],
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#transformer",
+        "#stochastic",
+        "#rl",
+        "#atari",
+        "#latent"
+      ],
+      "tldr": "Combines a stochastic categorical latent variational autoencoder with a Transformer sequence model for a fast, accurate imagination-based agent.",
+      "contribution": "STORM encodes frames into stochastic categorical latents (as in DreamerV2/IRIS) and models their temporal dynamics with a Transformer rather than a recurrent net, adding KL balancing and reconstruction objectives for stable representation learning. The stochastic latents capture environment uncertainty while the Transformer provides efficient parallel training and strong predictive accuracy. The actor-critic is trained entirely on latent imagination rollouts.",
+      "benchmarks": [
+        "Atari 100k"
+      ],
+      "metrics": "Mean human-normalized score ~1.27 on Atari 100k.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2310.09615",
+        "code": "https://github.com/weipu-zhang/STORM"
+      },
+      "buildsOn": [
+        "dreamerv2",
+        "iris"
+      ],
+      "related": [
+        "twm",
+        "iris"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "r2i",
+      "title": "Mastering Memory Tasks with World Models (Recall to Imagine)",
+      "authors": [
+        "Samsami",
+        "Zholus",
+        "Rajendran",
+        "Chandar"
+      ],
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#memory",
+        "#latent",
+        "#rl",
+        "#state-space",
+        "#long-horizon"
+      ],
+      "tldr": "Augments DreamerV3's world model with structured state-space sequence models to master long-term memory and credit-assignment tasks.",
+      "contribution": "Recall to Imagine (R2I) integrates S4-style structured state-space models into a DreamerV3 backbone, replacing the purely recurrent dynamics core with a sequence model capable of capturing very long temporal dependencies. This lets the agent remember distant observations during imagined rollouts, dramatically improving performance on memory-intensive benchmarks while keeping training fast and stable. It demonstrates that the choice of sequence model in the world model core is central to long-horizon reasoning.",
+      "benchmarks": [
+        "BSuite",
+        "POPGym",
+        "Memory Maze",
+        "Atari",
+        "DMControl"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2403.04253"
+      },
+      "buildsOn": [
+        "dreamerv3"
+      ],
+      "related": [
+        "iris",
+        "twm"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "delta-iris",
+      "title": "Efficient World Models with Context-Aware Tokenization (Delta-IRIS)",
+      "authors": [
+        "Micheli",
+        "Alonso",
+        "Fleuret"
+      ],
+      "year": 2024,
+      "venue": "ICML 2024",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#transformer",
+        "#discrete-tokens",
+        "#efficiency",
+        "#rl",
+        "#crafter"
+      ],
+      "tldr": "Cuts the token budget of Transformer world models by encoding only the changes between consecutive frames conditioned on context.",
+      "contribution": "Delta-IRIS extends IRIS with a context-aware tokenizer that encodes the delta between the current and previous frame given the past, so each timestep needs far fewer tokens than encoding a full frame from scratch. Fewer tokens shorten the Transformer's autoregressive sequence, making both training and imagination substantially faster while preserving prediction quality. This addresses the key scalability bottleneck of token-based world models: sequence length.",
+      "benchmarks": [
+        "Crafter",
+        "Atari 100k"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2406.19320",
+        "code": "https://github.com/vmicheli/delta-iris"
+      },
+      "buildsOn": [
+        "iris"
+      ],
+      "related": [
+        "storm",
+        "twm"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "ivideogpt",
+      "title": "iVideoGPT: Interactive VideoGPTs are Scalable World Models",
+      "authors": [
+        "Wu",
+        "Yin",
+        "Feng",
+        "He",
+        "Li",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "NeurIPS 2024",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#transformer",
+        "#discrete-tokens",
+        "#video",
+        "#robotics",
+        "#scalable"
+      ],
+      "tldr": "A scalable GPT-style world model over compressed video tokens that supports interactive action conditioning for prediction, planning, and control.",
+      "contribution": "iVideoGPT uses a compressive tokenizer that separates context frames from densely-tokenized future frames, keeping the autoregressive Transformer's sequence tractable while conditioning on actions and rewards. Pretrained on large-scale robot and human video and then fine-tuned, it serves as a general interactive world model for video prediction, visual planning, and model-based RL. It demonstrates that the VideoGPT recipe scales into a practical action-conditioned world model.",
+      "benchmarks": [
+        "RoboNet",
+        "VP2",
+        "Meta-World",
+        "Atari 100k"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2405.15223",
+        "code": "https://github.com/thuml/iVideoGPT"
+      },
+      "buildsOn": [
+        "iris"
+      ],
+      "related": [
+        "genie",
+        "gaia-1"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "transdreamer",
+      "title": "TransDreamer: Reinforcement Learning with Transformer World Models",
+      "authors": [
+        "Chen",
+        "Wu",
+        "Yoon",
+        "Ahn"
+      ],
+      "year": 2022,
+      "venue": "arXiv / Deep RL Workshop",
+      "paradigm": "autoregressive-wm",
+      "tags": [
+        "#transformer",
+        "#latent",
+        "#rl",
+        "#rssm",
+        "#early-work"
+      ],
+      "tldr": "One of the first works to swap Dreamer's recurrent RSSM dynamics core for a Transformer-based state-space model.",
+      "contribution": "Introduces the Transformer State-Space Model (TSSM), using attention instead of a recurrent GRU to propagate stochastic latent states through time, then trains a Dreamer-style actor-critic on imagined rollouts. By making dynamics attention-based it captures longer-range dependencies and parallelizes training, foreshadowing the wave of Transformer world models like IRIS, TWM, and STORM. It established that Transformers can serve as the sequence backbone for latent-imagination RL.",
+      "benchmarks": [
+        "Hidden Order Discovery",
+        "DMControl",
+        "Atari"
+      ],
+      "metrics": "Matches or exceeds DreamerV2 on control while outperforming it on long-memory tasks.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2202.09481"
+      },
+      "buildsOn": [
+        "dreamerv2"
+      ],
+      "related": [
+        "iris",
+        "twm",
+        "storm",
+        "dreamerv3"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "genie",
+      "title": "Genie: Generative Interactive Environments",
+      "authors": [
+        "Bruce",
+        "Dennis",
+        "Edwards",
+        "Parker-Holder",
+        "Shi",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "ICML 2024 (Best Paper)",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#seminal",
+        "#video",
+        "#latent-action",
+        "#transformer",
+        "#interactive",
+        "#foundation-model"
+      ],
+      "tldr": "First foundation world model trained purely on unlabeled internet gameplay video that learns a latent action space, letting users step through generated environments frame by frame.",
+      "contribution": "Genie trains an 11B-parameter spatiotemporal transformer on 200k+ hours of unlabeled 2D platformer video with no action or reward labels. Its core novelty is an unsupervised Latent Action Model that infers a small discrete set of consistent latent actions between frames, paired with a video tokenizer and an autoregressive dynamics model. At inference, a user supplies a latent action each step and Genie generates the next frame, effectively turning any image (even sketches or photos) into a controllable, playable environment.",
+      "benchmarks": [
+        "Platformers (internet gameplay)",
+        "RoboNet"
+      ],
+      "metrics": "11B params; controllable action space learned fully unsupervised.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2402.15391",
+        "project": "https://sites.google.com/view/genie-2024"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "ivideogpt",
+        "gaia-1",
+        "unisim",
+        "gamengen",
+        "diamond"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "gamengen",
+      "title": "Diffusion Models Are Real-Time Game Engines (GameNGen)",
+      "authors": [
+        "Valevski",
+        "Leviathan",
+        "Arar",
+        "Fruchter"
+      ],
+      "year": 2024,
+      "venue": "ICLR 2025",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#diffusion",
+        "#game-engine",
+        "#real-time",
+        "#video",
+        "#neural-simulation"
+      ],
+      "tldr": "Showed a diffusion model can fully simulate the game DOOM interactively at 20+ FPS with visual quality nearly indistinguishable from the real engine.",
+      "contribution": "A two-stage pipeline: an RL agent first plays DOOM to collect trajectories, then a modified Stable Diffusion model is trained to predict the next frame conditioned on past frames and player actions. Key tricks include conditioning on action history, noise-augmentation of context frames to prevent autoregressive drift over long rollouts, and a latent decoder fine-tune for HUD/detail fidelity. It demonstrated that a neural network alone, with no game code, can serve as an interactive real-time game engine.",
+      "benchmarks": [
+        "DOOM"
+      ],
+      "metrics": "20+ FPS on a single TPU; human raters near chance distinguishing real vs. simulated clips.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2408.14837",
+        "project": "https://gamengen.github.io/"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "diamond",
+        "genie",
+        "oasis"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "diamond",
+      "title": "Diffusion for World Modeling: Visual Details Matter in Atari (DIAMOND)",
+      "authors": [
+        "Alonso",
+        "Jelley",
+        "Micheli",
+        "Kanervisto",
+        "Storkey",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "NeurIPS 2024 (Spotlight)",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#diffusion",
+        "#rl",
+        "#atari",
+        "#world-model",
+        "#sample-efficient"
+      ],
+      "tldr": "Replaced the discrete-token imagination of prior world-model RL with a continuous diffusion world model, showing visual fidelity directly improves downstream agent performance.",
+      "contribution": "DIAMOND trains an agent entirely inside a diffusion-based world model instead of a discrete latent (VQ) model as in Dreamer/IRIS. It uses an EDM-style diffusion model to predict next frames conditioned on frame and action history, arguing that preserving fine visual details (which discrete tokenizers discard) matters for policy learning. The same diffusion world model also demonstrated interactive, playable CS:GO simulation, bridging RL world models and neural game engines.",
+      "benchmarks": [
+        "Atari 100k",
+        "CS:GO (interactive)"
+      ],
+      "metrics": "Mean human-normalized score 1.46 on Atari 100k, best among comparable world-model agents at the time.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2405.12399",
+        "code": "https://github.com/eloialonso/diamond",
+        "project": "https://diamond-wm.github.io/"
+      },
+      "buildsOn": [
+        "world-models",
+        "dreamerv3"
+      ],
+      "related": [
+        "gamengen",
+        "genie"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "gaia-1",
+      "title": "GAIA-1: A Generative World Model for Autonomous Driving",
+      "authors": [
+        "Hu",
+        "Russell",
+        "Yeo",
+        "Murez",
+        "Kendall",
+        "et al."
+      ],
+      "year": 2023,
+      "venue": "arXiv (Wayve)",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#autonomous-driving",
+        "#video",
+        "#transformer",
+        "#multimodal",
+        "#world-model"
+      ],
+      "tldr": "A ~9B-parameter generative world model for driving that predicts realistic future driving video conditioned on past video, text, and ego-actions.",
+      "contribution": "GAIA-1 tokenizes video into discrete codes and interleaves them with text and action tokens, then trains a large autoregressive transformer as the world model to predict future tokens, with a video diffusion decoder rendering realistic frames. Conditioning on actions and language lets it imagine diverse, controllable driving futures, including rare and counterfactual events. It was an early demonstration that scaling generative world models yields emergent understanding of driving dynamics and 3D geometry.",
+      "benchmarks": [
+        "Wayve proprietary urban driving data"
+      ],
+      "metrics": "9B parameters; multi-minute controllable driving video generation.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2309.17080",
+        "project": "https://wayve.ai/thinking/introducing-gaia1/"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "gaia-2",
+        "cosmos",
+        "unisim",
+        "copilot4d",
+        "genie",
+        "ivideogpt"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "gaia-2",
+      "title": "GAIA-2: A Controllable Multi-View Generative World Model for Autonomous Driving",
+      "authors": [
+        "Russell",
+        "Hu",
+        "Bewley",
+        "Corrado",
+        "Kendall",
+        "et al."
+      ],
+      "year": 2025,
+      "venue": "arXiv (Wayve)",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#autonomous-driving",
+        "#diffusion",
+        "#multi-view",
+        "#controllable",
+        "#world-model"
+      ],
+      "tldr": "A latent diffusion successor to GAIA-1 that generates temporally and spatially consistent multi-camera driving video with fine-grained structured control.",
+      "contribution": "GAIA-2 replaces GAIA-1's autoregressive token stack with a latent video diffusion architecture that jointly generates synchronized surround-view camera streams. It adds rich structured conditioning: ego-vehicle actions, dynamic agent bounding boxes, road layout, camera parameters, and environment attributes like weather and time of day. This makes it a practical, controllable simulator for generating safety-critical and rare scenarios across a full sensor rig for AV development.",
+      "benchmarks": [
+        "Wayve multi-view driving data"
+      ],
+      "metrics": "Consistent multi-view video with structured scene/action control.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2503.20523",
+        "project": "https://wayve.ai/thinking/gaia-2/"
+      },
+      "buildsOn": [
+        "gaia-1"
+      ],
+      "related": [
+        "cosmos",
+        "unisim",
+        "copilot4d"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "cosmos",
+      "title": "Cosmos World Foundation Model Platform for Physical AI",
+      "authors": [
+        "NVIDIA"
+      ],
+      "year": 2025,
+      "venue": "arXiv (NVIDIA)",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#foundation-model",
+        "#video",
+        "#diffusion",
+        "#physical-ai",
+        "#robotics"
+      ],
+      "tldr": "An open platform of large pre-trained video world foundation models (diffusion and autoregressive) plus tokenizers and data pipelines, meant to be fine-tuned into physical-AI world models for robotics and driving.",
+      "contribution": "Cosmos releases a suite of world foundation models trained on ~20M hours of physical-world video, in both diffusion and autoregressive-transformer variants, alongside efficient continuous and discrete video tokenizers and a curated data pipeline. The models generate future video conditioned on text, images, and actions and are designed as pre-trained bases that downstream users fine-tune for driving, manipulation, and other embodied tasks. It packages generative video world modeling as reusable open infrastructure for Physical AI.",
+      "benchmarks": [
+        "Physical-AI video benchmarks (driving, manipulation)"
+      ],
+      "metrics": "Trained on ~20M hours of video; multiple open model sizes released.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2501.03575",
+        "code": "https://github.com/NVIDIA/Cosmos",
+        "project": "https://www.nvidia.com/en-us/ai/cosmos/"
+      },
+      "buildsOn": [
+        "unisim",
+        "genie"
+      ],
+      "related": [
+        "gaia-2",
+        "sora-world-simulator",
+        "genie-envisioner"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "wham-muse",
+      "title": "World and Human Action Models (WHAM / Muse) for Gameplay Ideation",
+      "authors": [
+        "Kanervisto",
+        "Bignell",
+        "Wen",
+        "Devlin",
+        "Hofmann",
+        "et al."
+      ],
+      "year": 2025,
+      "venue": "Nature",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#game-simulation",
+        "#transformer",
+        "#action-conditioned",
+        "#generative",
+        "#creative-tool"
+      ],
+      "tldr": "A generative model of the game Bleeding Edge, published in Nature, that jointly predicts gameplay visuals and controller actions to support divergent, consistent, persistent gameplay ideation.",
+      "contribution": "WHAM (the Muse model) is trained on large-scale human gameplay of the 3D game Bleeding Edge, jointly modeling image and controller-action sequences with a transformer over discretized visual and action tokens. Because it predicts both what happens and what the player does, it generates coherent multi-minute gameplay, can be steered with injected actions or images, and preserves edited game elements over time. Microsoft framed it as a creative co-design tool, and its Nature publication marked a milestone for generative game world models.",
+      "benchmarks": [
+        "Bleeding Edge gameplay"
+      ],
+      "metrics": "Consistent, controllable multi-minute 3D gameplay generation.",
+      "links": {
+        "project": "https://www.microsoft.com/en-us/research/blog/introducing-muse-our-first-generative-ai-model-designed-for-gameplay-ideation/"
+      },
+      "buildsOn": [
+        "genie"
+      ],
+      "related": [
+        "gamengen",
+        "oasis"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "oasis",
+      "title": "Oasis: A Universe in a Transformer",
+      "authors": [
+        "Decart",
+        "Etched"
+      ],
+      "year": 2024,
+      "venue": "Technical Report",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#game-simulation",
+        "#diffusion",
+        "#real-time",
+        "#interactive",
+        "#minecraft"
+      ],
+      "tldr": "The first real-time, fully playable open-world neural game (Minecraft-style) generated frame-by-frame by a diffusion transformer responding live to keyboard and mouse input.",
+      "contribution": "Oasis combines a spatial autoencoder with an autoregressive diffusion-transformer dynamics backbone to generate open-world gameplay one frame at a time, conditioned on the user's real-time actions. Unlike bounded-game simulators, it produces an explorable open environment with emergent object permanence and physics, running interactively via heavy inference optimization and purpose-built hardware. It pushed generative video world models from short clips to sustained, user-driven real-time interaction.",
+      "benchmarks": [
+        "Minecraft-style open-world gameplay"
+      ],
+      "metrics": "Real-time interactive frame generation at playable frame rates.",
+      "links": {
+        "project": "https://oasis-model.github.io/"
+      },
+      "buildsOn": [
+        "gamengen",
+        "genie"
+      ],
+      "related": [
+        "diamond",
+        "wham-muse"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "sora-world-simulator",
+      "title": "Video Generation Models as World Simulators (Sora)",
+      "authors": [
+        "OpenAI"
+      ],
+      "year": 2024,
+      "venue": "OpenAI Technical Report",
+      "paradigm": "video-diffusion-wm",
+      "tags": [
+        "#video",
+        "#diffusion-transformer",
+        "#scaling",
+        "#world-simulation",
+        "#emergent"
+      ],
+      "tldr": "OpenAI's Sora report argued that scaling diffusion-transformer video generation on spacetime patches produces emergent world-simulation abilities like 3D consistency, object permanence, and physical interaction.",
+      "contribution": "Sora is a diffusion transformer trained to denoise sequences of spacetime latent patches, allowing variable resolution, duration, and aspect ratio in one model. The accompanying report positions large-scale video generation as an implicit world simulator, highlighting emergent capabilities such as consistent 3D scenes, object persistence through occlusion, and rudimentary cause-and-effect. It became the reference argument that scaling generative video, rather than explicit physics, can yield general world models.",
+      "benchmarks": [
+        "Qualitative text-to-video / world-consistency demonstrations"
+      ],
+      "metrics": "Up to ~1-minute high-fidelity video with emergent 3D and physical consistency.",
+      "links": {
+        "project": "https://openai.com/index/video-generation-models-as-world-simulators/"
+      },
+      "buildsOn": [],
+      "related": [
+        "cosmos",
+        "unisim",
+        "genie"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "i-jepa",
+      "title": "Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture (I-JEPA)",
+      "authors": [
+        "Assran",
+        "Duval",
+        "Misra",
+        "Bojanowski",
+        "Vincent",
+        "et al."
+      ],
+      "year": 2023,
+      "venue": "CVPR 2023",
+      "paradigm": "jepa",
+      "tags": [
+        "#seminal",
+        "#latent",
+        "#self-supervised",
+        "#vit",
+        "#image"
+      ],
+      "tldr": "The first concrete instantiation of JEPA for images, learning representations by predicting the latent embeddings of masked target blocks from a single context block.",
+      "contribution": "I-JEPA trains a Vision Transformer to predict, in representation space, the embeddings of several large target blocks of an image given a single spatially-distant context block. Targets are produced by an EMA teacher encoder, and a lightweight predictor conditioned on target positions maps context features to target features. Because supervision is in an abstract feature space rather than pixels, it learns high-level semantics efficiently and avoids the invariance-based augmentation used by prior joint-embedding methods.",
+      "benchmarks": [
+        "ImageNet-1k linear probe",
+        "ImageNet-1% low-shot"
+      ],
+      "metrics": "Strong ImageNet linear-probe and low-shot accuracy with far fewer pretraining GPU-hours than pixel-reconstruction MAE.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2301.08243",
+        "code": "https://github.com/facebookresearch/ijepa"
+      },
+      "buildsOn": [
+        "lecun-path-ami",
+        "data2vec"
+      ],
+      "related": [
+        "byol",
+        "v-jepa",
+        "mc-jepa"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "v-jepa",
+      "title": "Revisiting Feature Prediction for Learning Visual Representations from Video (V-JEPA)",
+      "authors": [
+        "Bardes",
+        "Garrido",
+        "Ponce",
+        "Rabbat",
+        "LeCun",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "TMLR 2024",
+      "paradigm": "jepa",
+      "tags": [
+        "#video",
+        "#latent",
+        "#self-supervised",
+        "#masked-modeling",
+        "#vit"
+      ],
+      "tldr": "Extends JEPA to video, showing pure feature prediction over masked spatiotemporal regions yields versatile visual representations without pixel reconstruction or labels.",
+      "contribution": "V-JEPA pretrains video Vision Transformers solely with a feature-prediction objective: given a masked video, a predictor reconstructs the EMA-teacher embeddings of the masked spatiotemporal patches rather than raw pixels. It removes reliance on pretrained image encoders, text, negatives, and reconstruction, showing multi-block masking of video is a strong self-supervised signal. The resulting frozen features perform well on motion-heavy and appearance-based downstream tasks under attentive probing.",
+      "benchmarks": [
+        "Kinetics-400",
+        "Something-Something v2",
+        "ImageNet-1k"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2404.08471",
+        "code": "https://github.com/facebookresearch/jepa",
+        "project": "https://ai.meta.com/research/publications/revisiting-feature-prediction-for-learning-visual-representations-from-video/"
+      },
+      "buildsOn": [
+        "i-jepa"
+      ],
+      "related": [
+        "data2vec",
+        "v-jepa2",
+        "mc-jepa"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "v-jepa2",
+      "title": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning",
+      "authors": [
+        "Assran",
+        "Bardes",
+        "et al."
+      ],
+      "year": 2025,
+      "venue": "arXiv (Meta AI)",
+      "paradigm": "jepa",
+      "tags": [
+        "#video",
+        "#world-model",
+        "#robotics",
+        "#planning",
+        "#latent"
+      ],
+      "tldr": "Scales V-JEPA to over a million hours of internet video and adds a latent action-conditioned world model, enabling zero-shot robot manipulation planning in representation space.",
+      "contribution": "V-JEPA 2 first pretrains a large action-free video JEPA on internet-scale video, achieving strong motion understanding, action anticipation, and (after LLM alignment) video question-answering. It then post-trains V-JEPA 2-AC, a latent action-conditioned world model, on under 62 hours of unlabeled robot video, learning to predict future latent states conditioned on actions. Planning rolls out this model in latent space and optimizes action sequences toward an image goal via MPC, letting a Franka arm perform pick-and-place zero-shot in new labs without task-specific data or rewards.",
+      "benchmarks": [
+        "Something-Something v2",
+        "Epic-Kitchens-100",
+        "Franka pick-and-place (real robot)"
+      ],
+      "metrics": "77.3 top-1 on SSv2 and 39.7 recall-at-5 on Epic-Kitchens-100 anticipation; zero-shot real-robot manipulation via latent planning.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2506.09985",
+        "code": "https://github.com/facebookresearch/vjepa2",
+        "project": "https://ai.meta.com/vjepa/"
+      },
+      "buildsOn": [
+        "v-jepa"
+      ],
+      "related": [
+        "lecun-path-ami"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "data2vec",
+      "title": "data2vec: A General Framework for Self-supervised Learning in Speech, Vision and Language",
+      "authors": [
+        "Baevski",
+        "Hsu",
+        "Xu",
+        "Babu",
+        "Gu",
+        "Auli"
+      ],
+      "year": 2022,
+      "venue": "ICML 2022",
+      "paradigm": "jepa",
+      "tags": [
+        "#self-supervised",
+        "#latent",
+        "#multimodal",
+        "#masked-modeling"
+      ],
+      "tldr": "A modality-agnostic self-supervised recipe that predicts contextualized latent target representations from a teacher network, directly foreshadowing the feature-prediction objective at the heart of JEPA.",
+      "contribution": "data2vec trains a student to predict, for masked inputs, the latent representations produced by an EMA teacher over the full unmasked input, using the same objective across speech, vision, and text. The targets are contextualized (averaging multiple top layers of the teacher) rather than local tokens or pixels, so the model regresses continuous latent features instead of reconstructing raw signals. This established latent-target prediction with a momentum teacher as a strong, general self-supervised principle that I-JEPA and V-JEPA later specialized.",
+      "benchmarks": [
+        "ImageNet-1k",
+        "LibriSpeech",
+        "GLUE"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2202.03555",
+        "code": "https://github.com/facebookresearch/fairseq/tree/main/examples/data2vec"
+      },
+      "buildsOn": [
+        "byol"
+      ],
+      "related": [
+        "i-jepa",
+        "v-jepa"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "mc-jepa",
+      "title": "MC-JEPA: A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features",
+      "authors": [
+        "Bardes",
+        "Ponce",
+        "LeCun"
+      ],
+      "year": 2023,
+      "venue": "arXiv",
+      "paradigm": "jepa",
+      "tags": [
+        "#latent",
+        "#video",
+        "#optical-flow",
+        "#self-supervised"
+      ],
+      "tldr": "A JEPA variant that jointly learns optical-flow (motion) and content representations in a single shared encoder, unifying self-supervised motion estimation with image feature learning.",
+      "contribution": "MC-JEPA couples a self-supervised optical-flow estimation objective with a VICReg-style content-feature objective inside one multi-task joint-embedding predictive architecture. The shared encoder is trained so motion prediction and content representation reinforce each other, producing features useful for both flow estimation and image-level understanding. It demonstrated that JEPA-style latent prediction can capture temporal motion structure, an idea carried forward into video JEPAs.",
+      "benchmarks": [
+        "KITTI / Sintel optical flow",
+        "ImageNet-1k"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2307.12698"
+      },
+      "buildsOn": [
+        "i-jepa"
+      ],
+      "related": [
+        "v-jepa"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "byol",
+      "title": "Bootstrap Your Own Latent: A New Approach to Self-Supervised Learning (BYOL)",
+      "authors": [
+        "Grill",
+        "Strub",
+        "Altché",
+        "Tallec",
+        "Richemond",
+        "et al."
+      ],
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "paradigm": "jepa",
+      "tags": [
+        "#self-supervised",
+        "#latent",
+        "#non-contrastive",
+        "#momentum-teacher"
+      ],
+      "tldr": "Showed joint-embedding representations can be learned by predicting a momentum target network's embeddings without negative pairs, providing the collapse-avoiding predictor + EMA-teacher recipe JEPAs rely on.",
+      "contribution": "BYOL trains an online network to predict the projected embedding of a target network fed a different augmented view of the same image, where the target is an exponential moving average of the online network. It demonstrated that this asymmetric predictor-plus-momentum-teacher design avoids representation collapse without contrastive negatives, a mechanism directly reused by data2vec and the JEPA family. Though augmentation-based rather than masking-based, it is a key conceptual predecessor to latent prediction in the LeCun line.",
+      "benchmarks": [
+        "ImageNet-1k linear probe"
+      ],
+      "metrics": "74.3% ImageNet top-1 under linear evaluation (ResNet-50), competitive with supervised training at the time.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2006.07733"
+      },
+      "buildsOn": [],
+      "related": [
+        "data2vec",
+        "i-jepa"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "daydreamer",
+      "title": "DayDreamer: World Models for Physical Robot Learning",
+      "authors": [
+        "Wu",
+        "Escontrela",
+        "Hafner",
+        "Goldberg",
+        "Abbeel"
+      ],
+      "year": 2022,
+      "venue": "CoRL 2022",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#seminal",
+        "#robotics",
+        "#rl",
+        "#latent",
+        "#sim-to-real"
+      ],
+      "tldr": "First to train Dreamer-style latent world models directly on physical robots, learning useful behaviors in hours of real-world experience without simulators.",
+      "contribution": "DayDreamer applies the Dreamer algorithm end-to-end on real hardware: a recurrent latent world model is learned online from raw sensor streams, and an actor-critic policy is trained purely in the model's imagined rollouts. Because planning happens inside the learned latent dynamics rather than the environment, sample efficiency is high enough to learn on physical robots directly. It demonstrated a quadruped learning to walk from scratch in about an hour and manipulation/navigation skills on several platforms, showing model-based RL can replace simulation-and-transfer for embodied learning.",
+      "benchmarks": [
+        "A1 quadruped locomotion",
+        "XArm pick-and-place",
+        "UR5 multi-object",
+        "Sphero navigation"
+      ],
+      "metrics": "A1 quadruped learns to walk in ~1 hour of real-world interaction.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2206.14176",
+        "project": "https://danijar.com/project/daydreamer/"
+      },
+      "buildsOn": [
+        "dreamerv2",
+        "dreamer",
+        "planet",
+        "world-models"
+      ],
+      "related": [
+        "dreamerv3",
+        "pwm"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "unisim",
+      "title": "Learning Interactive Real-World Simulators (UniSim)",
+      "authors": [
+        "Yang",
+        "Du",
+        "Ghasemipour",
+        "Tompson",
+        "Schuurmans",
+        "Abbeel",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "ICLR 2024 (Outstanding Paper)",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#seminal",
+        "#video",
+        "#diffusion",
+        "#robotics",
+        "#action-conditioned",
+        "#simulator"
+      ],
+      "tldr": "A single action-conditioned video diffusion model trained on diverse datasets acts as a universal real-world simulator, letting agents and policies be trained in imagined interaction.",
+      "contribution": "UniSim unifies heterogeneous data (robot trajectories, human video, navigation, text-image) into one action-conditioned video generation model that predicts the visual consequences of arbitrary high- and low-level actions, supporting long-horizon rollout by chaining conditioned generations. Agents and vision-language policies trained entirely inside this learned simulator transfer zero-shot to real robots. It reframed world modeling as a foundation-model-scale generative simulator of real-world interaction, a key precursor to later physical-AI world foundation models.",
+      "benchmarks": [
+        "Language Table",
+        "real-robot manipulation transfer"
+      ],
+      "metrics": "Zero-shot sim-to-real transfer of policies trained entirely in the learned simulator.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2310.06114",
+        "project": "https://universal-simulator.github.io/unisim/"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "genie",
+        "cosmos",
+        "gaia-1",
+        "genie-envisioner"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "copilot4d",
+      "title": "Copilot4D: Learning Unsupervised World Models for Autonomous Driving via Discrete Diffusion",
+      "authors": [
+        "Zhang",
+        "Xiong",
+        "Yang",
+        "Casas",
+        "Hu",
+        "Urtasun"
+      ],
+      "year": 2023,
+      "venue": "ICLR 2024 (Waabi)",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#driving",
+        "#lidar",
+        "#diffusion",
+        "#tokenization",
+        "#4d"
+      ],
+      "tldr": "An unsupervised point-cloud world model that tokenizes LiDAR and forecasts future 3D scenes with discrete diffusion, learning driving dynamics without labels.",
+      "contribution": "Copilot4D uses a VQ-VAE to tokenize LiDAR observations, then trains a discrete-diffusion transformer to predict future tokenized point clouds conditioned on ego motion. Operating in the geometric LiDAR space rather than pixels gives sharp, physically grounded 4D forecasts of the surrounding scene. It demonstrated that fully unsupervised sensor-space world models can substantially improve future point-cloud prediction, offering a label-free path to driving dynamics learning.",
+      "benchmarks": [
+        "nuScenes",
+        "KITTI Odometry",
+        "Argoverse2"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2311.01017"
+      },
+      "buildsOn": [
+        "world-models"
+      ],
+      "related": [
+        "gaia-1",
+        "unisim"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "nwm",
+      "title": "Navigation World Models",
+      "authors": [
+        "Bar",
+        "Zhou",
+        "Tran",
+        "Darrell",
+        "LeCun"
+      ],
+      "year": 2024,
+      "venue": "CVPR 2025",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#navigation",
+        "#diffusion",
+        "#planning",
+        "#transformer",
+        "#video"
+      ],
+      "tldr": "A conditional diffusion-transformer world model that predicts future egocentric visual observations from navigation actions, enabling planning by imagining and scoring trajectories.",
+      "contribution": "NWM trains a Conditional Diffusion Transformer (CDiT) over egocentric video from many robot and human navigation datasets to forecast future first-person observations given a sequence of navigation actions. At test time an agent plans by rolling out candidate action sequences in the model and selecting those that reach a goal image, and it can imagine trajectories in unfamiliar environments. This provided a scalable, data-driven world-model approach to visual navigation and planning without an explicit map.",
+      "benchmarks": [
+        "RECON",
+        "SCAND",
+        "TartanDrive",
+        "Go Stanford"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2412.03572",
+        "project": "https://www.amirbar.net/nwm/"
+      },
+      "buildsOn": [
+        "world-models",
+        "unisim"
+      ],
+      "related": [
+        "daydreamer",
+        "genie-envisioner"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "pwm",
+      "title": "PWM: Policy Learning with Large World Models",
+      "authors": [
+        "Georgiev",
+        "Giridhar",
+        "Hansen",
+        "Garg"
+      ],
+      "year": 2024,
+      "venue": "arXiv",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#rl",
+        "#robotics",
+        "#latent",
+        "#gradients",
+        "#control"
+      ],
+      "tldr": "Learns continuous-control policies by backpropagating first-order gradients through large multi-task learned world models, avoiding expensive online planning.",
+      "contribution": "PWM pre-trains large multi-task world models and then extracts policies via first-order analytic gradients through the smooth learned dynamics, rather than zeroth-order sampling or online model-predictive search. Because the world model provides differentiable, well-behaved dynamics, gradient-based policy optimization becomes efficient even for high-dimensional embodiments. It showed a single large world model can yield strong multi-task continuous-control policies, including complex humanoid and dexterous tasks, in minutes of policy training.",
+      "benchmarks": [
+        "Flex/MuJoCo continuous control",
+        "80-task multi-task control"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2407.02466",
+        "project": "https://www.imgeorgiev.com/pwm/"
+      },
+      "buildsOn": [
+        "dreamerv3",
+        "tdmpc2"
+      ],
+      "related": [
+        "daydreamer"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "tesseract",
+      "title": "TesserAct: Learning 4D Embodied World Models",
+      "authors": [
+        "Zhen",
+        "Sun",
+        "Zhang",
+        "Li",
+        "Zhou",
+        "et al."
+      ],
+      "year": 2025,
+      "venue": "arXiv",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#robotics",
+        "#4d",
+        "#video",
+        "#manipulation",
+        "#geometry"
+      ],
+      "tldr": "Predicts action-conditioned RGB, depth, and normal videos to build a geometry-aware 4D world model for robotic manipulation planning.",
+      "contribution": "TesserAct extends video world models from RGB to RGB-D-N (color, depth, surface normals), training on annotated robot video to forecast spatially and temporally consistent 4D scenes conditioned on actions. The explicit geometry lets it reconstruct future 3D scene evolution and derive executable manipulation trajectories, giving more physically grounded predictions than pixel-only models. This targets the geometry gap in embodied world models, improving downstream manipulation planning.",
+      "benchmarks": [
+        "RLBench",
+        "real-robot manipulation"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2504.20995",
+        "project": "https://tesseractworld.github.io/"
+      },
+      "buildsOn": [
+        "unisim",
+        "cosmos"
+      ],
+      "related": [
+        "genie-envisioner"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "genie-envisioner",
+      "title": "Genie Envisioner: A Unified World Foundation Platform for Robotic Manipulation",
+      "authors": [
+        "AgiBot",
+        "et al."
+      ],
+      "year": 2025,
+      "venue": "arXiv",
+      "paradigm": "embodied-agents",
+      "tags": [
+        "#robotics",
+        "#foundation",
+        "#video",
+        "#manipulation",
+        "#policy"
+      ],
+      "tldr": "A unified platform coupling a video world model, a policy head, and an evaluation simulator so manipulation policies can be trained and assessed inside learned imagination.",
+      "contribution": "Genie Envisioner integrates an instruction-conditioned video world model with an action policy and a benchmarking simulator into one closed-loop stack for robotic manipulation. The world model provides visual futures used both to train the policy and to evaluate it without real-robot rollouts, unifying generation, control, and evaluation. It exemplifies the move toward embodied 'world foundation platforms' that serve as reusable neural simulators for manipulation learning.",
+      "benchmarks": [
+        "AgiBot manipulation suite"
+      ],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2508.05635"
+      },
+      "buildsOn": [
+        "unisim",
+        "cosmos"
+      ],
+      "related": [
+        "tesseract"
+      ],
+      "importance": 3
+    },
+    {
+      "id": "ale",
+      "title": "The Arcade Learning Environment: An Evaluation Platform for General Agents",
+      "authors": [
+        "Bellemare",
+        "Naddaf",
+        "Veness",
+        "Bowling"
+      ],
+      "year": 2013,
+      "venue": "JAIR",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#seminal",
+        "#atari",
+        "#rl",
+        "#benchmark",
+        "#evaluation"
+      ],
+      "tldr": "Introduced the Atari 2600 suite as a standardized, high-variety testbed that became the default benchmark for general RL agents and, later, sample-efficient world models.",
+      "contribution": "ALE wraps hundreds of Atari 2600 games behind a common interface exposing screen pixels, RAM, and reward, turning a diverse collection of human games into a single platform for measuring general competence. It deliberately separates games used for development from those held out for testing, encouraging agents that generalize rather than overfit. By making raw-pixel control with sparse game scores a shared standard, it set the evaluation protocol that Deep Q-Networks and essentially all later Atari benchmarks build on.",
+      "benchmarks": [
+        "Atari (ALE)"
+      ],
+      "metrics": "57-game Atari suite; human-normalized score is the standard aggregate metric.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1207.4708",
+        "code": "https://github.com/Farama-Foundation/Arcade-Learning-Environment"
+      },
+      "buildsOn": [],
+      "related": [
+        "revisiting-ale",
+        "simple-atari100k"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "revisiting-ale",
+      "title": "Revisiting the Arcade Learning Environment: Evaluation Protocols and Open Problems for General Agents",
+      "authors": [
+        "Machado",
+        "Bellemare",
+        "Talvitie",
+        "Veness",
+        "Hausknecht",
+        "Bowling"
+      ],
+      "year": 2018,
+      "venue": "JAIR",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#atari",
+        "#evaluation",
+        "#methodology",
+        "#rl",
+        "#reproducibility"
+      ],
+      "tldr": "Diagnosed how inconsistent evaluation choices made Atari results incomparable and proposed a standardized protocol (sticky actions, no game-specific tuning) still used today.",
+      "contribution": "Shows that seemingly minor experimental choices, such as how episodes terminate, whether the agent sees flickering frames, and how determinism is handled, silently changed reported Atari scores and made cross-paper comparison unreliable. It introduces sticky actions as a simple, principled source of stochasticity so agents cannot exploit the emulator's determinism by memorizing open-loop action sequences. It formalizes reporting practices and highlights open challenges like hard exploration, establishing the evaluation methodology later sample-efficiency benchmarks inherit.",
+      "benchmarks": [
+        "Atari (ALE)"
+      ],
+      "metrics": "Standardized sticky-action protocol with 25% action-repeat probability.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1709.06009",
+        "code": "https://github.com/Farama-Foundation/Arcade-Learning-Environment"
+      },
+      "buildsOn": [
+        "ale"
+      ],
+      "related": [
+        "ale",
+        "simple-atari100k",
+        "bsuite"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "simple-atari100k",
+      "title": "Model-Based Reinforcement Learning for Atari (SimPLe)",
+      "authors": [
+        "Kaiser",
+        "Babaeizadeh",
+        "Miłoś",
+        "Osiński",
+        "Campbell",
+        "Czechowski",
+        "et al."
+      ],
+      "year": 2020,
+      "venue": "ICLR 2020",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#atari100k",
+        "#model-based",
+        "#sample-efficiency",
+        "#video-prediction",
+        "#benchmark"
+      ],
+      "tldr": "Introduced the Atari 100k benchmark by training a video-prediction world model to enable Atari agents that learn from only ~2 hours of play.",
+      "contribution": "SimPLe learns an action-conditioned pixel-level video-prediction model of an Atari game and uses simulated rollouts inside this learned model to train a policy, drastically cutting real environment interaction. To make the setting meaningful it restricts agents to 100k environment steps (roughly two hours of gameplay), a regime where model-free methods were far from human performance. This 100k-interaction cap became the de facto Atari 100k sample-efficiency benchmark that virtually every subsequent world-model and data-efficient RL paper reports on.",
+      "benchmarks": [
+        "Atari 100k"
+      ],
+      "metrics": "Established the 100k-step (26-game) sample-efficiency protocol on Atari.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1903.00374",
+        "code": "https://github.com/google-research/simulated-policy-learning"
+      },
+      "buildsOn": [
+        "ale",
+        "world-models"
+      ],
+      "related": [
+        "ale",
+        "revisiting-ale",
+        "dmcontrol"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "dmcontrol",
+      "title": "DeepMind Control Suite",
+      "authors": [
+        "Tassa",
+        "Doron",
+        "Muldal",
+        "Erez",
+        "Li",
+        "et al."
+      ],
+      "year": 2018,
+      "venue": "arXiv (tech report)",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#continuous-control",
+        "#benchmark",
+        "#rl",
+        "#mujoco",
+        "#evaluation"
+      ],
+      "tldr": "Provided a standardized set of MuJoCo continuous-control tasks with uniform reward scales that became the reference benchmark for continuous-control and pixel-based world models.",
+      "contribution": "The Control Suite packages a range of physics-based locomotion and manipulation tasks on top of MuJoCo behind a single Python API, with rewards normalized to a fixed 0-1000 range so scores are directly comparable across tasks. It supplies both state-based and pixel-based observations, making it a natural testbed for latent-dynamics world models that must learn control from images. Its consistent structure and tooling made DMControl the standard continuous-control counterpart to Atari for evaluating sample efficiency and model-based methods.",
+      "benchmarks": [
+        "DMControl"
+      ],
+      "metrics": "Rewards normalized to a 0-1000 per-episode scale across all tasks.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1801.00690",
+        "code": "https://github.com/google-deepmind/dm_control"
+      },
+      "buildsOn": [],
+      "related": [
+        "simple-atari100k",
+        "procgen"
+      ],
+      "importance": 5
+    },
+    {
+      "id": "procgen",
+      "title": "Leveraging Procedural Generation to Benchmark Reinforcement Learning (Procgen)",
+      "authors": [
+        "Cobbe",
+        "Hesse",
+        "Hilton",
+        "Schulman"
+      ],
+      "year": 2020,
+      "venue": "ICML 2020",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#generalization",
+        "#procedural",
+        "#benchmark",
+        "#rl",
+        "#evaluation"
+      ],
+      "tldr": "A suite of 16 procedurally generated arcade-style games designed to measure generalization by training and testing agents on distinct level distributions.",
+      "contribution": "Procgen generates a fresh distribution of levels for each of its 16 games, so agents cannot succeed by memorizing specific layouts and must generalize across procedurally varied instances. It cleanly separates a train-on-N-levels / test-on-unseen-levels protocol, exposing the large generalization gap that plagued deep RL agents evaluated only on their training environments. Its fast, GPU-friendly implementation and controllable difficulty made it a widely used benchmark for studying generalization, an axis largely absent from fixed Atari and DMControl tasks.",
+      "benchmarks": [
+        "Procgen"
+      ],
+      "metrics": "Train vs. test level generalization gap across 16 games.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1912.01588",
+        "code": "https://github.com/openai/procgen"
+      },
+      "buildsOn": [
+        "ale"
+      ],
+      "related": [
+        "crafter",
+        "craftax",
+        "dmcontrol"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "crafter",
+      "title": "Benchmarking the Spectrum of Agent Capabilities (Crafter)",
+      "authors": [
+        "Hafner"
+      ],
+      "year": 2022,
+      "venue": "ICLR 2022",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#open-ended",
+        "#benchmark",
+        "#exploration",
+        "#sample-efficiency",
+        "#evaluation"
+      ],
+      "tldr": "A fast, open-ended Minecraft-like survival game that scores agents on a spectrum of 22 achievements rather than a single reward, probing broad capabilities under tight sample budgets.",
+      "contribution": "Crafter is a lightweight 2D survival environment with procedurally generated worlds where progress requires exploration, tool crafting, resource gathering, and combat over long horizons. Instead of one scalar return it defines 22 semantically distinct achievements and reports a geometric-mean success score, so an agent must demonstrate many competencies rather than exploit a single reward loop. It is deliberately fast and evaluated under a small interaction budget, making it a compact stress test for the deep exploration and world-modeling abilities that Atari and DMControl do not isolate.",
+      "benchmarks": [
+        "Crafter"
+      ],
+      "metrics": "Crafter score = geometric mean of 22 achievement success rates within a 1M-step budget.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2109.06780",
+        "code": "https://github.com/danijar/crafter",
+        "project": "https://danijar.com/project/crafter/"
+      },
+      "buildsOn": [
+        "procgen"
+      ],
+      "related": [
+        "craftax",
+        "procgen",
+        "dreamerv2"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "craftax",
+      "title": "Craftax: A Lightning-Fast Benchmark for Open-Ended Reinforcement Learning",
+      "authors": [
+        "Matthews",
+        "Beukman",
+        "Ellis",
+        "Samvelyan",
+        "Jackson",
+        "et al."
+      ],
+      "year": 2024,
+      "venue": "ICML 2024",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#open-ended",
+        "#jax",
+        "#benchmark",
+        "#exploration",
+        "#evaluation"
+      ],
+      "tldr": "A JAX reimplementation and major expansion of Crafter, adding NetHack-style depth and running orders of magnitude faster for accessible open-ended RL research.",
+      "contribution": "Craftax rebuilds Crafter entirely in JAX so environment steps run on-accelerator and fully vectorized, enabling billions of steps in hours on a single GPU and removing the CPU-simulation bottleneck of open-ended benchmarks. It substantially deepens the task with multiple dungeon levels, richer progression, and NetHack-inspired mechanics, greatly extending the achievement hierarchy and horizon. The result is a hard, long-horizon exploration benchmark that remains cheap to run, making serious open-ended RL and world-model experiments feasible for small labs.",
+      "benchmarks": [
+        "Craftax",
+        "Crafter"
+      ],
+      "metrics": "GPU-accelerated env yielding roughly three orders of magnitude speedup over Crafter.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2402.16801",
+        "code": "https://github.com/MichaelTMatthews/Craftax"
+      },
+      "buildsOn": [
+        "crafter"
+      ],
+      "related": [
+        "crafter",
+        "procgen"
+      ],
+      "importance": 4
+    },
+    {
+      "id": "bsuite",
+      "title": "Behaviour Suite for Reinforcement Learning (bsuite)",
+      "authors": [
+        "Osband",
+        "Doron",
+        "Hessel",
+        "Aslanides",
+        "Sezener",
+        "et al."
+      ],
+      "year": 2020,
+      "venue": "ICLR 2020",
+      "paradigm": "benchmarks-eval",
+      "tags": [
+        "#evaluation",
+        "#methodology",
+        "#diagnostics",
+        "#rl",
+        "#benchmark"
+      ],
+      "tldr": "A curated collection of targeted diagnostic experiments that isolate specific RL capabilities such as memory, exploration, and credit assignment rather than reporting one aggregate score.",
+      "contribution": "bsuite is a set of small, carefully designed environments where each experiment probes one core RL challenge (e.g. deep exploration, long-term memory, robustness to noise or reward scale) in isolation. It defines automated scoring and standardized reports so agents can be characterized along interpretable capability axes rather than a single headline number. By emphasizing controlled, reproducible diagnosis over leaderboard chasing, it shaped how the field thinks about what benchmarks should actually measure in world-model and RL agents.",
+      "benchmarks": [
+        "bsuite"
+      ],
+      "metrics": "Per-capability radar scores across memory, exploration, credit-assignment, scale, noise.",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/1908.03568",
+        "code": "https://github.com/google-deepmind/bsuite"
+      },
+      "buildsOn": [],
+      "related": [
+        "revisiting-ale",
+        "crafter"
+      ],
+      "importance": 3
+    }
+  ],
+  "concepts": [
+    {
+      "id": "learning-in-imagination",
+      "kind": "concept",
+      "title": "Agents can learn competent behavior almost entirely inside a learned model's imagined rollouts.",
+      "tags": [
+        "#concept",
+        "#imagination",
+        "#model-based-rl"
+      ],
+      "body": "The core trick that gives world models their name: rather than learning by expensive trial and error in the real environment, an agent learns a compact simulator of that environment and then trains its policy on cheap 'imagined' rollouts sampled from the model. [[world-models]] first made this vivid by evolving a controller entirely inside a dreamed VizDoom, and the [[dreamer]] line turned it into a reliable recipe, backpropagating value gradients through imagined latent trajectories. [[dreamerv3]] showed a single hyperparameter set can imagine well enough to mine diamonds in Minecraft from scratch, while [[daydreamer]] proved the same imagination loop is efficient enough to train physical robots in about an hour. Imagination also underlies the sample-efficiency benchmarks: [[simple-atari100k]] introduced the 100k-step regime precisely to reward agents that squeeze learning out of a learned model. The bet is that a good enough dream is a cheaper, safer, and infinitely repeatable substitute for reality.",
+      "links": [
+        "world-models",
+        "dreamer",
+        "dreamerv3",
+        "daydreamer",
+        "simple-atari100k"
+      ]
+    },
+    {
+      "id": "value-equivalence-principle",
+      "kind": "concept",
+      "title": "A world model only needs to predict the quantities used for planning, not reconstruct the future.",
+      "tags": [
+        "#concept",
+        "#value-equivalence",
+        "#planning"
+      ],
+      "body": "A recurring insight is that a world model does not need to reproduce the environment faithfully; it only needs to be accurate about the quantities a planner actually consumes. [[value-equivalence]] formalized this: two models are interchangeable if they induce the same Bellman updates over the policies and value functions you care about. [[muzero]] embodied it by learning a latent dynamics model trained solely to predict reward, value, and policy — never pixels — yet still mastering Go, chess, shogi, and Atari. [[value-prediction-network]] anticipated the idea by planning in an abstract value-predicting state, and [[tdmpc]] carried it into continuous control, planning over a task-oriented latent with a learned terminal value. This reframes model learning as task-relevant abstraction rather than generative fidelity, and it stands in productive tension with pixel-faithful approaches like the token model [[iris]], which argue that visual detail is itself useful signal.",
+      "links": [
+        "value-equivalence",
+        "muzero",
+        "value-prediction-network",
+        "tdmpc",
+        "iris"
+      ]
+    },
+    {
+      "id": "rssm-latent-state",
+      "kind": "concept",
+      "title": "Splitting latent state into deterministic memory and stochastic surprise is the workhorse of latent world models.",
+      "tags": [
+        "#concept",
+        "#rssm",
+        "#architecture"
+      ],
+      "body": "Most latent world models share a structural idea introduced by [[planet]]: the Recurrent State-Space Model, which factors each latent state into a deterministic recurrent path that carries reliable memory and a stochastic path that absorbs uncertainty and multimodality. Keeping both means the model can remember long-range context without becoming overconfident about what happens next. [[dreamer]] built its imagination actor-critic directly on this backbone, and [[dreamerv2]] sharpened it by making the stochastic component a vector of categorical variables trained with straight-through gradients plus KL balancing to stop the prior from collapsing. Later work stressed the recurrent core: [[transdreamer]] swapped the GRU for a Transformer to attend over longer histories, and [[r2i]] inserted structured state-space layers to master very long-horizon memory tasks. The RSSM factorization is arguably the single most reused architectural motif across the latent-imagination lineage.",
+      "links": [
+        "planet",
+        "dreamer",
+        "dreamerv2",
+        "transdreamer",
+        "r2i"
+      ]
+    },
+    {
+      "id": "discrete-vs-continuous-latents",
+      "kind": "concept",
+      "title": "Whether the world's latent code is discrete tokens or continuous vectors changes what a world model can imagine.",
+      "tags": [
+        "#concept",
+        "#representation",
+        "#tokens"
+      ],
+      "body": "A live design axis is how a world model encodes the world: as discrete tokens or continuous vectors. [[dreamerv2]] showed that swapping Gaussian latents for categorical ones dramatically improved long-horizon imagination on Atari, and this discrete representation became the conceptual basis for token world models like [[iris]] and [[storm]], which discretize frames with a VQ tokenizer and predict the next tokens autoregressively. [[delta-iris]] pushed tokens further by encoding only the change between frames to shorten sequences. But discretization throws away fine visual detail, and [[diamond]] argued the opposite: a continuous diffusion world model that preserves pixel-level detail can yield better policies because those details matter for decision making. The tension — compact discrete abstraction versus rich continuous fidelity — has no settled answer, and it interacts directly with how much compute imagination costs.",
+      "links": [
+        "dreamerv2",
+        "iris",
+        "storm",
+        "delta-iris",
+        "diamond"
+      ]
+    },
+    {
+      "id": "predict-features-not-pixels",
+      "kind": "concept",
+      "title": "Predicting abstract representations sidesteps the intractability of predicting every pixel of an uncertain future.",
+      "tags": [
+        "#concept",
+        "#jepa",
+        "#self-supervised"
+      ],
+      "body": "The JEPA thesis is that predicting the future in raw pixel space is both wasteful and ill-posed, because the future is uncertain and most pixels are unpredictable noise. [[lecun-path-ami]] proposed instead to predict the abstract representation of a target from a context, using an energy-based joint-embedding architecture with regularization against collapse. [[i-jepa]] made this concrete for images, predicting the embeddings of masked blocks from a single context block via an EMA teacher, and [[v-jepa]] extended it to masked spatiotemporal video. The mechanism was foreshadowed by [[byol]], which showed a predictor plus momentum teacher avoids collapse without negative pairs, and generalized by [[data2vec]] across speech, vision, and text. The payoff, realized in [[v-jepa2]], is a latent world model you can actually plan in: rolling out abstract states conditioned on actions to control a real robot, all without ever rendering a pixel.",
+      "links": [
+        "lecun-path-ami",
+        "i-jepa",
+        "v-jepa",
+        "byol",
+        "data2vec",
+        "v-jepa2"
+      ]
+    },
+    {
+      "id": "curiosity-as-compression",
+      "kind": "concept",
+      "title": "Curiosity can be formalized as intrinsic reward for improving a predictive model of the world.",
+      "tags": [
+        "#concept",
+        "#curiosity",
+        "#intrinsic-motivation"
+      ],
+      "body": "Long before deep RL, [[schmidhuber-predictive]] coupled a controller to a self-supervised recurrent 'model network' that predicts future inputs, and observed that the same predictor can drive exploration: reward the agent for visiting states where its predictions are wrong. [[schmidhuber-fun-theory]] formalized this as intrinsic motivation proportional to the agent's rate of progress in compressing its sensory history, so an agent is drawn to what it can still learn but has not yet mastered — neither fully predictable nor fully random. This anticipates the free-energy view in [[friston-fep]], where action and perception both minimize surprise about sensory input, and connects to the predictive-coding account in [[rao-ballard-pc]]. Curiosity, on this view, is not a bolt-on bonus but a direct consequence of building and improving a world model, tying exploration and representation learning into a single objective.",
+      "links": [
+        "schmidhuber-predictive",
+        "schmidhuber-fun-theory",
+        "friston-fep",
+        "rao-ballard-pc"
+      ]
+    },
+    {
+      "id": "brain-as-predictive-machine",
+      "kind": "concept",
+      "title": "Neuroscience frames the cortex as a hierarchical generative model that transmits only prediction errors.",
+      "tags": [
+        "#concept",
+        "#neuroscience",
+        "#predictive-coding"
+      ],
+      "body": "World-model research carries a deep debt to theoretical neuroscience. [[rao-ballard-pc]] proposed that the visual cortex is a hierarchy of generative predictors in which feedback connections carry predictions downward and feedforward connections carry only the residual prediction error upward — a scheme that reproduces puzzling receptive-field effects. [[friston-fep]] generalized this into the free-energy principle, casting perception, learning, and action as one process of minimizing the surprise of sensory inputs against an internal model. These ideas gave biological legitimacy to the engineering claim, argued in [[lecun-path-ami]], that intelligence is organized around a predictive world model. They also motivate the representational-prediction stance captured in [[predict-features-not-pixels]]: brains do not reconstruct their retinas, they infer compact causes, which is exactly what feature-predicting architectures try to imitate.",
+      "links": [
+        "rao-ballard-pc",
+        "friston-fep",
+        "lecun-path-ami",
+        "predict-features-not-pixels"
+      ]
+    },
+    {
+      "id": "video-as-world-simulator",
+      "kind": "concept",
+      "title": "Scaling generative video turns raw footage into controllable, playable simulators of the world.",
+      "tags": [
+        "#concept",
+        "#video",
+        "#generative"
+      ],
+      "body": "A newer paradigm argues that you don't need an explicit dynamics equation at all: train a big enough generative video model and world simulation emerges. [[sora-world-simulator]] made the strongest version of the claim, reporting emergent 3D consistency and object permanence from scaling diffusion transformers on spacetime patches. [[genie]] showed such models can be made interactive, learning a latent action space from unlabeled gameplay so a user can step through generated worlds. [[gamengen]] proved a diffusion model can reproduce DOOM in real time, and [[diamond]] connected this back to RL by training an agent inside a diffusion world model. [[unisim]] and [[cosmos]] scale the idea toward physical AI, unifying diverse real-world video into simulators robots can be trained inside. The open worry is whether such models learn genuine physics or merely plausible-looking correlations that break under intervention.",
+      "links": [
+        "sora-world-simulator",
+        "genie",
+        "gamengen",
+        "diamond",
+        "unisim",
+        "cosmos"
+      ]
+    },
+    {
+      "id": "latent-actions-from-video",
+      "kind": "concept",
+      "title": "A controllable action space can be recovered from unlabeled video without any action labels.",
+      "tags": [
+        "#concept",
+        "#latent-action",
+        "#video"
+      ],
+      "body": "Most world models need action labels, but the internet's video is unlabeled. A striking result is that a consistent, controllable action space can be inferred from raw frames alone. [[genie]] trains an unsupervised latent action model that infers a small set of discrete actions between consecutive frames, so at inference a user supplies latent actions to steer generation of a playable environment. [[wham-muse]] jointly models gameplay frames and controller actions to support steerable, persistent gameplay ideation. [[v-jepa2]] shows the payoff for control: after action-free pretraining on internet video, it post-trains a latent action-conditioned world model on a little robot video and plans in representation space. [[ivideogpt]] similarly conditions a scalable video GPT on actions and rewards. Learning actions from observation alone could unlock world models from the vast reservoir of passive video that no one has labeled.",
+      "links": [
+        "genie",
+        "wham-muse",
+        "v-jepa2",
+        "ivideogpt"
+      ]
+    },
+    {
+      "id": "sample-efficiency-frontier",
+      "kind": "concept",
+      "title": "World models push the sample-efficiency frontier, learning from only a couple hours of experience.",
+      "tags": [
+        "#concept",
+        "#sample-efficiency",
+        "#benchmarks"
+      ],
+      "body": "One of the clearest reasons to build a world model is data efficiency: a learned simulator lets you reuse each real interaction many times. [[simple-atari100k]] crystallized this by capping agents at 100k steps — about two hours of play — a regime where model-free methods flounder. [[efficientzero]] was first to exceed median human performance there, adding a self-supervised consistency loss so its learned model trains reliably from tiny data. Token and latent models pushed further: [[iris]] reached human-level mean score on Atari 100k with an autoregressive transformer, and [[dreamerv3]] delivered strong results across 150+ tasks with fixed hyperparameters. Efficiency also enables the physical world, where [[daydreamer]] trained a quadruped to walk in an hour, and it scales, as [[tdmpc2]] shows a single model improving smoothly with size across dozens of tasks.",
+      "links": [
+        "simple-atari100k",
+        "efficientzero",
+        "iris",
+        "dreamerv3",
+        "daydreamer",
+        "tdmpc2"
+      ]
+    },
+    {
+      "id": "planning-vs-learned-policy",
+      "kind": "concept",
+      "title": "World models let you either plan online at decision time or amortize planning into a learned policy.",
+      "tags": [
+        "#concept",
+        "#planning",
+        "#policy"
+      ],
+      "body": "Given a world model, there are two ways to act. You can plan online, searching over action sequences at each decision — as [[planet]] does with the cross-entropy method in latent space, or as [[muzero]] does with Monte Carlo Tree Search inside its learned model. Or you can amortize planning into a reactive policy trained against the model, as [[dreamer]] does by backpropagating value gradients through imagined rollouts. Hybrids blur the line: [[tdmpc]] plans over a short horizon but bootstraps beyond it with a learned value function, getting planning's sample efficiency and a policy's asymptotic reach. [[pwm]] takes the amortized extreme, extracting policies via first-order gradients through a large differentiable world model to skip online search entirely. The trade-off is decision-time compute and flexibility versus fast, cheap inference.",
+      "links": [
+        "planet",
+        "muzero",
+        "dreamer",
+        "tdmpc",
+        "pwm"
+      ]
+    },
+    {
+      "id": "benchmarks-shape-progress",
+      "kind": "concept",
+      "title": "Standardized benchmarks and their evaluation protocols quietly steer what world-model research optimizes.",
+      "tags": [
+        "#concept",
+        "#evaluation",
+        "#methodology"
+      ],
+      "body": "Benchmarks are not neutral rulers; they encode assumptions that steer a whole subfield. [[ale]] made raw-pixel Atari the default test of general agents, and [[revisiting-ale]] then showed that quiet choices like determinism and episode termination had made results incomparable, introducing sticky actions to fix it. [[simple-atari100k]] redirected the field toward sample efficiency by capping interaction, which is exactly why world models look so good on it. [[dmcontrol]] standardized continuous control with normalized rewards, while [[crafter]] and [[bsuite]] deliberately measure breadth: Crafter scores 22 distinct achievements to probe open-ended competence, and bsuite isolates capabilities like memory and exploration rather than reporting one number. What we choose to measure quietly decides which world models we call successful.",
+      "links": [
+        "ale",
+        "revisiting-ale",
+        "simple-atari100k",
+        "dmcontrol",
+        "crafter",
+        "bsuite"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-pixels-vs-representations",
+      "kind": "question",
+      "title": "Should world models predict raw pixels or abstract representations?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "The [[predict-features-not-pixels]] camp, led by [[lecun-path-ami]] and instantiated in [[i-jepa]], argues that reconstructing pixels wastes capacity on unpredictable detail and that prediction belongs in latent space. The opposing evidence comes from generative video: [[diamond]] found that preserving fine visual detail measurably improved agent performance, and interactive simulators like [[gamengen]] depend on pixel fidelity. Is abstraction essential for scalable planning, or does discarding pixels throw away signal that turns out to matter for control? The answer likely depends on the task, but no one has cleanly characterized when.",
+      "links": [
+        "predict-features-not-pixels",
+        "lecun-path-ami",
+        "i-jepa",
+        "diamond",
+        "gamengen"
+      ]
+    },
+    {
+      "id": "q-explicit-vs-emergent",
+      "kind": "question",
+      "title": "Do we need explicit models and planning, or will scaled video generation yield world models for free?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "[[sora-world-simulator]] and [[cosmos]] bet that scaling generative video produces emergent world simulation — physics, permanence, 3D — with no explicit dynamics or planner. The structured-planning tradition, from [[muzero]] to [[dreamerv3]], instead builds compact models tuned for decision making and searches or imagines within them. Are the emergent capabilities of giant video models genuine causal understanding usable for control, or plausible-looking correlations that break under intervention? The crux is whether raw scale can substitute for the inductive biases that made planning-based world models work.",
+      "links": [
+        "sora-world-simulator",
+        "cosmos",
+        "muzero",
+        "dreamerv3"
+      ]
+    },
+    {
+      "id": "q-sequence-backbone",
+      "kind": "question",
+      "title": "What sequence model belongs at the core of a world model: recurrence, attention, or state-space?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "The [[dreamerv3]] line rides a recurrent RSSM, yet [[transdreamer]] and [[twm]] replaced recurrence with attention to capture longer histories, while [[r2i]] inserted structured state-space layers to ace long-memory tasks. Each backbone trades off parallel training, context length, and stability under imagined rollout. Which core generalizes best across memory-heavy, reactive, and long-horizon tasks at once, and does the right answer change as models and data scale? So far every backbone wins on some benchmark and loses on another.",
+      "links": [
+        "dreamerv3",
+        "transdreamer",
+        "twm",
+        "r2i"
+      ]
+    },
+    {
+      "id": "q-video-to-robot-transfer",
+      "kind": "question",
+      "title": "Can world models learned from internet video transfer to controlling real robots?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "[[v-jepa2]] and [[unisim]] claim that models pretrained on large, mostly passive video can be turned into planners that drive real hardware zero-shot, and platforms like [[cosmos]] and navigation models like [[nwm]] extend the promise. But passive video lacks actions, contact forces, and the consequences of intervention, and [[daydreamer]] showed some embodied skills still demand real on-robot experience. How much genuine control transfers from watching versus doing, and where does the reality gap reopen? This is the central bet of physical-AI world models.",
+      "links": [
+        "v-jepa2",
+        "unisim",
+        "cosmos",
+        "nwm",
+        "daydreamer"
+      ]
+    },
+    {
+      "id": "q-stochasticity",
+      "kind": "question",
+      "title": "How should world models represent and plan under genuine environmental stochasticity?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "Deterministic latent models can be brittle when the world is truly random. [[stochastic-muzero]] added discrete chance nodes so tree search can reason over outcomes, while the RSSM in [[planet]] and the categorical latents in [[storm]] bake stochasticity into the state, and diffusion models like [[diamond]] represent uncertainty through their sampling process. Which representation of randomness — explicit chance nodes, stochastic latents, or generative sampling — actually supports robust long-horizon planning? The field lacks a shared account of when modeling uncertainty pays off versus when a determinized model suffices.",
+      "links": [
+        "stochastic-muzero",
+        "planet",
+        "storm",
+        "diamond"
+      ]
+    },
+    {
+      "id": "q-benchmarks-overfit",
+      "kind": "question",
+      "title": "Are our benchmarks measuring general world-modeling ability or narrow overfitting?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "[[revisiting-ale]] showed that Atari scores were quietly gamed by exploiting determinism, and [[procgen]] exposed huge train-test generalization gaps once levels were procedurally varied. Broad-competence suites like [[crafter]] and diagnostic ones like [[bsuite]] were built precisely because single-number leaderboards mislead, a worry captured in [[benchmarks-shape-progress]]. As world models saturate Atari 100k, are we measuring real understanding or overfitting to a handful of games and protocols? Choosing the next benchmark may matter more than the next architecture.",
+      "links": [
+        "revisiting-ale",
+        "procgen",
+        "crafter",
+        "bsuite",
+        "benchmarks-shape-progress"
+      ]
+    },
+    {
+      "id": "q-fidelity-worth-it",
+      "kind": "question",
+      "title": "Does visual fidelity in a world model actually help the agent, or is it wasted compute?",
+      "tags": [
+        "#question",
+        "#open"
+      ],
+      "body": "The [[value-equivalence-principle]] says a model need only predict what the planner uses, and [[value-equivalence]] with [[muzero]] never reconstruct a pixel — yet [[diamond]] reports that visual detail directly improves policies, and [[iris]] leans on faithful token reconstruction. [[delta-iris]] splits the difference, keeping detail but slashing token budgets. When is reconstruction a useful auxiliary signal versus an expensive distraction from the decision-relevant quantities? The compute cost of fidelity makes this more than a philosophical question as world models scale.",
+      "links": [
+        "value-equivalence-principle",
+        "value-equivalence",
+        "muzero",
+        "diamond",
+        "iris",
+        "delta-iris"
+      ]
+    }
+  ],
+  "home": {
+    "id": "home",
+    "kind": "home",
+    "title": "Engram — A Second Brain for World Models",
+    "tags": [
+      "#home",
+      "#index"
+    ],
+    "body": "Welcome to Engram, a living map of research on world models — learned internal simulators that let machines predict, imagine, and plan. The map is organized into eight lobes. It starts with [[foundations-theory]], where [[dyna]] framed planning as learning from imagined data and neuroscience cast the brain as a predictor. From there the [[latent-imagination]] lobe traces [[world-models]] into the Dreamer family up to [[dreamerv3]]; [[planning-mcts]] follows [[muzero]] and the value-equivalence idea; and [[autoregressive-wm]] tokenizes the world for transformers like [[iris]]. The frontier lobes push further: [[video-diffusion-wm]] with playable simulators like [[genie]], [[jepa]] built on [[lecun-path-ami]] and [[i-jepa]], and [[embodied-agents]] where models leave the lab for real robots. [[benchmarks-eval]] keeps everyone honest. If you read nothing else, start with the hub notes that stitch the graph together: [[learning-in-imagination]], [[value-equivalence-principle]], [[predict-features-not-pixels]], and [[video-as-world-simulator]]. Each paper links to its ancestors and descendants, and the concept notes link generously across lobes. Follow the wikilinks in any direction; the graph rewards wandering, and every path eventually loops back to the same central bet — that a good enough model of the world is the foundation of intelligence.",
+    "links": [
+      "foundations-theory",
+      "latent-imagination",
+      "planning-mcts",
+      "autoregressive-wm",
+      "video-diffusion-wm",
+      "jepa",
+      "embodied-agents",
+      "benchmarks-eval",
+      "world-models",
+      "dreamerv3",
+      "muzero",
+      "iris",
+      "genie",
+      "lecun-path-ami",
+      "i-jepa",
+      "dyna",
+      "learning-in-imagination",
+      "value-equivalence-principle",
+      "predict-features-not-pixels",
+      "video-as-world-simulator"
+    ]
+  }
+}
