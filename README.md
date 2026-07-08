@@ -18,12 +18,14 @@ A PDF folder or markdown list does not show any of that. Engram makes the struct
 
 ## What's in the graph
 
-| | Count |
-|---|---|
-| Papers | 57 |
-| Research paradigms | 8 |
-| Concept hubs | 12 |
-| Open questions | 7 |
+
+|                    | Count |
+| ------------------ | ----- |
+| Papers             | 57    |
+| Research paradigms | 8     |
+| Concept hubs       | 12    |
+| Open questions     | 7     |
+
 
 Paradigms include latent imagination (Dreamer family), planning & value-equivalence (MuZero), autoregressive/token models, JEPA, video diffusion, embodied agents, foundations, and benchmarks.
 
@@ -74,15 +76,6 @@ After editing `content/graph.json`, regenerate the Obsidian vault:
 ```bash
 npm run export:vault
 ```
-
-## Growing the graph
-
-1. **Ingest a paper** — `prompts/01-ingest-paper.md` → add to `papers[]`
-2. **Write a concept hub** — `prompts/02-concept-note.md`
-3. **Connect two notes** — `prompts/03-connection-finder.md`
-4. **Lint** — `prompts/04-health-check.md`
-
-See [SCHEMA.md](./SCHEMA.md) for ids, linking rules, and editorial conventions.
 
 ## Stack
 
